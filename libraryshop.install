@@ -1,0 +1,64 @@
+<?php
+/**
+ * Implements hook_install()
+ */
+function libraryshop_install() {
+
+}
+
+/**
+ * Implements hook_uninstall()
+ */
+function libraryshop_uninstall() {
+
+}
+
+/**
+ * Implements hook_schema()
+ */
+function libraryshop_schema() {
+  $schema['books'] = array(
+    'description' => 'Stores information about books from library',
+    'fields' => array(
+      'id' => array(
+        'description' => 'ID is incremented automatically',
+        'type' => 'serial',
+        'not null' => TRUE,
+      ),
+      'title' => array(
+        'description' => 'The title or name of the book',
+        'type' => 'varchar',
+        'length' => '100',
+        'not null' => TRUE,
+      ),
+      'author' => array(
+        'description' => 'The author(s) of the book',
+        'type' => 'varchar',
+        'length' => '100',
+        'not null' => TRUE,
+      ),
+      'isbn' => array(
+        'description' => 'The ISBN code which identify the book',
+        'type' => 'varchar',
+        'length' => '13',
+        'not null' => TRUE,
+      ),
+      'year' => array(
+        'description' => 'The year when the book was published',
+        'type' => 'int',
+        'not null' => TRUE,
+      ),
+      'pages' => array(
+        'description' => 'Number of pages that book has',
+        'type' => 'int',
+        'not null' => TRUE,
+      ),
+      'supply' => array(
+        'description' => 'Number of books that are in store',
+        'type' => 'int',
+        'not null' => TRUE,
+      ),
+    ),
+    'primary key' => array('id'),
+  );
+}

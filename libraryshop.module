@@ -1,0 +1,131 @@
+<?php
+
+/**
+ *
+ * Store and list all books that are in library
+ *
+ *
+ * @author Calin Salagean <salagean.calin@gmail.com>
+ * @version 0.0.1
+ */
+
+/**
+ * Implements hook_menu()
+ */
+
+function libraryshop_menu() {
+  $items['library/new'] = array(
+    'title' => 'Add new book to libray',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('libraryshop_form'),
+    'access arguments' => array('access content'),
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_form()
+ */
+
+function libraryshop_form($form, &$form_state) {
+  $form['title'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Title of the book'),
+    '#required' => TRUE
+  );
+  $form['author'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Author of the book'),
+    '#required' => TRUE
+  );
+  $form['isbn'] = array(
+    '#type' => 'textfield',
+    '#title' => t('ISBN of the book'),
+    '#required' => TRUE
+  );
+  $form['year'] = array(
+    '#type' => 'textfield',
+    '#title' => t('The year when the book was released'),
+    '#required' => TRUE
+  );
+  $form['pages'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Number of pages'),
+    '#required' => TRUE
+  );
+  $form['supply'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Number of books in store'),
+    '#required' => TRUE
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Insert'
+  );
+
+  return $form;
+}
+
+/**
+ * Implements hook_validate()
+ */
+
+function libraryshop_form_validate($form, &$form_state) {
+  $isbn = str_replace("-", "", $form_state['input']['isbn']);
+  var_dump($isbn);
+  if(strlen($isbn) != 10 && strlen($isbn) != 13) {
+    form_set_error('isbn', 'The ISBN has not the right size');
+  } else if(!isValidIsbn10($isbn) && !isValidIsbn13($isbn)) {
+    form_set_error('isbn', 'The ISBN is not valid');
+  }
+}
+
+/**
+ * Implements hook_views_data()
+ */
+function libraryshop_views_data() {
+  //TODO: Implement data rendering
+}
+
+/**
+ * Vendor functions for ISBN validation
+ */
+
+
+/**
+ * Validate ISBN13
+ */
+function isValidIsbn13($isbn)
+{
+    $check = 0;
+
+    for ($i = 0; $i < 13; $i += 2) {
+        $check += (int)$isbn[$i];
+    }
+
+    for ($i = 1; $i < 12; $i += 2) {
+        $check += 3 * $isbn[$i];
+    }
+
+    return (0 === ($check % 10)) ? 2 : false;
+}
+
+/**
+ * Validate ISBN10
+ */
+function isValidIsbn10($isbn)
+{
+    $check = 0;
+
+    for ($i = 0; $i < 10; $i++) {
+        if ('x' === strtolower($isbn[$i])) {
+            $check += 10 * (10 - $i);
+        } elseif (is_numeric($isbn[$i])) {
+            $check += (int)$isbn[$i] * (10 - $i);
+        } else {
+            return false;
+        }
+    }
+
+    return (0 === ($check % 11)) ? 1 : false;
+}

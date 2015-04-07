@@ -1,0 +1,3 @@
+name = "Library"
+description = "A small module that integrate a library functionality"
+core = 7.x
