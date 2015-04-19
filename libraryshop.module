@@ -80,6 +80,21 @@ function libraryshop_form_validate($form, &$form_state) {
   }
 }
 
+function libraryshop_form_submit($form, &$form_state) {
+  $book_data = $form_state['input'];
+  $book = db_insert('books')->fields(array(
+    'title' => $book_data['title'],
+    'author' => $book_data['author'],
+    'isbn' => str_replace("-", "", $book_data['isbn']),
+    'year' => $book_data['year'],
+    'pages' => $book_data['pages'],
+    'supply' => $book_data['supply']
+  ))->execute();
+
+  drupal_set_message('The book was inserted', 'status');
+  return $form;
+}
+
 /**
  * Implements hook_views_data()
  */
